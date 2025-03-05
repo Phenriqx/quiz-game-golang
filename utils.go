@@ -9,7 +9,7 @@ import (
 
 type GameState struct {
 	Name      string
-	Points    string
+	Points    int
 	Questions []Question
 }
 
@@ -29,7 +29,7 @@ func (g *GameState) Init() {
 
 	g.Name = name
 	fmt.Printf("Let's play %s", g.Name)
-	g.Points = "0"
+	g.Points = 0
 }
 
 func (g *GameState) ProcessCSV () {
@@ -50,10 +50,11 @@ func (g *GameState) ProcessCSV () {
 
 	for index, record := range records {
 		if index > 0 {
+			correctAnswer, _ := toInt(record[5])
 			question := Question {
 				Text: record[0],
 				Alternatives: record[1:5],
-				Answer: record[5],
+				Answer: correctAnswer,
 			}
 
 			g.Questions = append(g.Questions, question)
@@ -64,5 +65,5 @@ func (g *GameState) ProcessCSV () {
 type Question struct {
 	Text         string
 	Alternatives []string
-	Answer       string
+	Answer       int
 }
