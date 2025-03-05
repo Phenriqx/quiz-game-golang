@@ -15,11 +15,11 @@ func (g *GameState) RunGame() {
 
 	// Starts a 90-second countdown in a separate Goroutine.
 	go func() {
-		countdown := 15
+		countdown := 90
 		for countdown > 0 {
 			time.Sleep(1 * time.Second)
 			countdown--
-			fmt.Printf("\033[31m%d seconds remaining\033[31m\n", countdown)
+			//fmt.Printf("\033[31m%d seconds remaining\033[31m\n", countdown)
 		}
 		done <- true
 	} ()
@@ -32,7 +32,7 @@ func (g *GameState) RunGame() {
 			return
 		default:
 		}
-		
+
 		fmt.Printf("\033[33m %d - %s \033[33m\n", i+1, question.Text)
 
 		for j, alternative := range question.Alternatives {
@@ -50,7 +50,6 @@ func (g *GameState) RunGame() {
 				fmt.Println("\n⏳ Time's up! Quiz over.")
 				return
 			default:
-				// Reading user input
 				reader := bufio.NewReader(os.Stdin)
 				read, _ := reader.ReadString('\n')
 
@@ -87,7 +86,14 @@ func main() {
 	game.Init()
 	game.RunGame()
 
-	fmt.Printf("Your final score is: %d points!\n", game.Points)
+	percentage := float64(game.Points) / 190 * 100
+
+	if float64(game.Points) >= (190 * 0.6) {
+		fmt.Printf("Congratulations! You passed the quiz with a %f percent mark\n", percentage)
+	} else {
+		fmt.Println("Sorry, you didn't pass the quiz. Better luck next time!")
+        fmt.Printf("Your final score is: %d points and a %f percent mark!\n", game.Points, percentage)
+	}
 }
 
 func toInt(s string) (int, error) {
